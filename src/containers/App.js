@@ -6,6 +6,8 @@ import Logo from '../components/Logo/Logo';
 import ImageLinkForm from '../components/ImageLinkForm/ImageLinkForm';
 import Rank from '../components/Rank/Rank';
 import FaceRecognition from '../components/FaceRecognition/FaceRecognition';
+import SignIn from '../components/SignIn/SignIn';
+import Register from '../components/Register/Register';
 import './App.css';
 
 const app = new Clarifai.App({
@@ -31,7 +33,9 @@ class App extends React.Component {
     this.state = { 
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route: 'signin',
+      isSignedIn: false
     }
   }
 
@@ -54,7 +58,6 @@ class App extends React.Component {
 
   onKeyPressSubmit = (event) => {
     if(this.state.input.length > 0 && event.key === 'Enter'){
-      console.log('calling');
       this.onButtonSumbit();
     }
   }
@@ -74,24 +77,48 @@ class App extends React.Component {
     .catch(err => console.log(err))
   }
 
+  onRouteChange = (route) => {
+    if(route === 'signout') {
+      this.setState({ isSignedIn: false })
+    } else if (route === 'home') {
+      this.setState({ isSignedIn: true })
+    }
+    this.setState({ route: route })
+  }
+
   render() {
+    const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
         <Particles className='particles' 
           params={particlesOptions} 
         />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm 
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSumbit}
-          onKeyPressSubmit={this.onKeyPressSubmit}
-        />
-        <FaceRecognition 
-          box={this.state.box}
-          imageUrl={this.state.imageUrl}
-        />
+        <Navigation 
+          onRouteChange={this.onRouteChange}
+          isSignedIn={isSignedIn}
+          />
+        { route === 'home'
+          ? 
+          <div>
+            <Logo />
+            <Rank />
+            <ImageLinkForm 
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSumbit}
+              onKeyPressSubmit={this.onKeyPressSubmit}
+            />
+            <FaceRecognition 
+              box={box}
+              imageUrl={imageUrl}
+            />
+          </div>
+          : ( route === 'signin'
+              ?
+              <SignIn onRouteChange={this.onRouteChange}/>
+              :
+              <Register onRouteChange={this.onRouteChange}/>
+          )
+        }
       </div>
     );
   }
