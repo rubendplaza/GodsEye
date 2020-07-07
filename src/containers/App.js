@@ -25,7 +25,7 @@ const particlesOptions = {
 const initialState = {
   input: '',
   imageUrl: '',
-  box: {},
+  faceBoxes: [],
   route: 'signin',
   isSignedIn: false,
   user: {
@@ -54,21 +54,27 @@ class App extends React.Component {
     }});
   }
 
-  calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+  getFaceLocations = (data) => {
+    console.log(data);
+    const clarifaiFaces = data.outputs[0].data.regions;
+    // const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    return clarifaiFaces;
+  }
+
+  getFaceBox = (box) => {
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
     return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
+        leftCol: box.left_col * width,
+        topRow: box.top_row * height,
+        rightCol: width - (box.right_col * width),
+        bottomRow: height - (box.bottom_row * height)
     }
   }
 
-  displayFaceBox = (box) => {
-    this.setState({box: box});
+  displayFaceBoxes = (faceBoxes) => {
+    this.setState({faceBoxes: faceBoxes});
   }
 
   onKeyPressSubmit = (event) => {
@@ -107,7 +113,7 @@ class App extends React.Component {
           })
           .catch(console.log)
       }
-      this.displayFaceBox(this.calculateFaceLocation(response))
+      this.displayFaceBoxes(this.getFaceLocations(response))
       })
     .catch(err => console.log(err))
   }
@@ -122,7 +128,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { isSignedIn, imageUrl, route, box } = this.state;
+    const { isSignedIn, imageUrl, route, faceBoxes } = this.state;
     return (
       <div className="App">
         <Particles className='particles' 
@@ -146,8 +152,9 @@ class App extends React.Component {
               onKeyPressSubmit={this.onKeyPressSubmit}
             />
             <FaceRecognition 
-              box={box}
+              faceBoxes={faceBoxes}
               imageUrl={imageUrl}
+              getFaceBox={this.getFaceBox}
             />
           </div>
           : ( route === 'signin'
