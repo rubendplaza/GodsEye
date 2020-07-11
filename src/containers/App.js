@@ -101,8 +101,8 @@ class App extends React.Component {
     .then(response => response.json())
     .then(response => {
       console.log('RESPONSE', response);
-      console.log('RESPONSE DATA', response.data);
-      if (response) {
+      console.log('RESPONSE OUTPUTS', response.outputs);
+      if (response.outputs) {
         fetch('https://limitless-fjord-79432.herokuapp.com/image', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
@@ -116,8 +116,8 @@ class App extends React.Component {
             this.setState(Object.assign(this.state.user, { entries: currentCount}))
           })
           .catch(console.log)
+          this.displayFaceBoxes(this.getFaceLocations(response))
       }
-      this.displayFaceBoxes(this.getFaceLocations(response))
       })
     .catch(err => console.log(err))
   }
