@@ -25,6 +25,7 @@ const particlesOptions = {
 const initialState = {
   input: '',
   imageUrl: '',
+  previousUrl: '',
   faceBoxes: [],
   route: 'signin',
   isSignedIn: false,
@@ -88,33 +89,37 @@ class App extends React.Component {
 
   onPictureSumbit = () => {
     this.setState({imageUrl: this.state.input});
-    fetch('https://limitless-fjord-79432.herokuapp.com/imageurl', {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        input: this.state.input,
-        id: this.state.id
-      })
-    })
-    .then(response => response.json())
-    .then(response => {
-      if (response) {
-        fetch('https://limitless-fjord-79432.herokuapp.com/image', {
-          method: 'put',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            id: this.state.user.id
-          })
+    const {previousUrl, imageUrl} = this.state;
+    if(previousUrl !== imageUrl){
+      fetch('https://limitless-fjord-79432.herokuapp.com/imageurl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input,
+          id: this.state.id
         })
-          .then(response => response.json())
-          .then(currentCount => {
-            this.setState(Object.assign(this.state.user, { entries: currentCount}))
-          })
-          .catch(console.log)
-        }
-        this.displayFaceBoxes(this.getFaceLocations(response))
       })
-    .catch(err => console.log(err))
+      .then(response => response.json())
+      .then(response => {
+        if (response) {
+          fetch('https://limitless-fjord-79432.herokuapp.com/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(currentCount => {
+              this.setState(Object.assign(this.state.user, { entries: currentCount}))
+              this.setState(Object.assign(this.state, {imageUrl: previousUrl}));
+            })
+            .catch(console.log)
+          }
+          this.displayFaceBoxes(this.getFaceLocations(response))
+        })
+      .catch(err => console.log(err))
+    }
   }
 
   onRouteChange = (route) => {
