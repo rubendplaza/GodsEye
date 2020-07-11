@@ -90,6 +90,7 @@ class App extends React.Component {
 
   onPictureSumbit = () => {
     this.setState({imageUrl: this.state.input});
+    console.log(this.state.id);
     fetch('https://limitless-fjord-79432.herokuapp.com/imageurl', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
