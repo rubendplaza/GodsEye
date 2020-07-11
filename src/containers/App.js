@@ -90,6 +90,8 @@ class App extends React.Component {
   onPictureSumbit = () => {
     this.setState({imageUrl: this.state.input});
     const {previousUrl, imageUrl} = this.state;
+    console.log('PREVIOUS:', previousUrl);
+    console.log('CURRENT:', imageUrl);
     if(previousUrl !== imageUrl){
       fetch('https://limitless-fjord-79432.herokuapp.com/imageurl', {
         method: 'post',
