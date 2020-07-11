@@ -92,7 +92,7 @@ class App extends React.Component {
     this.setState({imageUrl: this.state.input});
     console.log(this.state.id);
     fetch('https://limitless-fjord-79432.herokuapp.com/imageurl', {
-      method: 'post',
+      method: 'put',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         input: this.state.input,
