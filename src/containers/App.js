@@ -55,9 +55,7 @@ class App extends React.Component {
   }
 
   getFaceLocations = (data) => {
-    console.log(data);
     const clarifaiFaces = data.outputs[0].data.regions;
-    // const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     return clarifaiFaces;
   }
 
@@ -90,9 +88,8 @@ class App extends React.Component {
 
   onPictureSumbit = () => {
     this.setState({imageUrl: this.state.input});
-    console.log(this.state.id);
     fetch('https://limitless-fjord-79432.herokuapp.com/imageurl', {
-      method: 'put',
+      method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         input: this.state.input,
@@ -101,14 +98,11 @@ class App extends React.Component {
     })
     .then(response => response.json())
     .then(response => {
-      console.log('RESPONSE', response);
-      console.log('RESPONSE OUTPUTS', response.outputs);
-      if (response.outputs) {
+      if (response) {
         fetch('https://limitless-fjord-79432.herokuapp.com/image', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
-            input: this.state.input,
             id: this.state.user.id
           })
         })
@@ -117,8 +111,8 @@ class App extends React.Component {
             this.setState(Object.assign(this.state.user, { entries: currentCount}))
           })
           .catch(console.log)
-          this.displayFaceBoxes(this.getFaceLocations(response))
-      }
+        }
+        this.displayFaceBoxes(this.getFaceLocations(response))
       })
     .catch(err => console.log(err))
   }
