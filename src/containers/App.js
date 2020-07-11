@@ -119,7 +119,7 @@ class App extends React.Component {
         })
         .catch(err => console.log(err))
       }
-      this.setState(Object.assign(this.state, {imageUrl: previousUrl}));
+      this.setState(Object.assign(this.state, {previousUrl: imageUrl}));
   }
 
   onRouteChange = (route) => {
