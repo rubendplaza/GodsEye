@@ -94,7 +94,8 @@ class App extends React.Component {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        input: this.state.input
+        input: this.state.input,
+        id: this.state.id
       })
     })
     .then(response => response.json())
@@ -104,6 +105,7 @@ class App extends React.Component {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
+            input: this.state.input,
             id: this.state.user.id
           })
         })
