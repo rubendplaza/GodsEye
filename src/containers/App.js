@@ -100,8 +100,8 @@ class App extends React.Component {
     })
     .then(response => response.json())
     .then(response => {
-      console.log(response);
-      console.log(response.data);
+      console.log('RESPONSE', response);
+      console.log('RESPONSE DATA', response.data);
       if (response) {
         fetch('https://limitless-fjord-79432.herokuapp.com/image', {
           method: 'put',
