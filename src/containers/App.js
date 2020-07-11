@@ -100,7 +100,7 @@ class App extends React.Component {
     })
     .then(response => response.json())
     .then(response => {
-      if (response) {
+      if (response.outputs) {
         fetch('https://limitless-fjord-79432.herokuapp.com/image', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
