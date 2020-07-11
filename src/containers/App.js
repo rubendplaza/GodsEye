@@ -112,14 +112,14 @@ class App extends React.Component {
             .then(response => response.json())
             .then(currentCount => {
               this.setState(Object.assign(this.state.user, { entries: currentCount}))
-              this.setState(Object.assign(this.state, {imageUrl: previousUrl}));
             })
             .catch(console.log)
           }
           this.displayFaceBoxes(this.getFaceLocations(response))
         })
-      .catch(err => console.log(err))
-    }
+        .catch(err => console.log(err))
+      }
+      this.setState(Object.assign(this.state, {imageUrl: previousUrl}));
   }
 
   onRouteChange = (route) => {
